@@ -1,46 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<!--
-  ====================================================================================
-  FOIA Request Email Generator – Illinois
-  ====================================================================================
-  This single HTML file creates a simple web tool that helps you
-  write a Freedom-of-Information-Act (FOIA) request email to any
-  public body in the state of Illinois.
-
-  How it works:
-  1.  Fill in the short form on this page.
-  2.  A ready-to-copy email is created instantly below the form.
-  3.  Copy the text, paste it into your email client, add your
-      name/contact details, and send it.
-
-  The styling is inspired by the GOV.UK Design System:
-  – Clear, sans-serif font
-  – Calm colour palette
-  – Large tap targets on mobile
-  – Dark-mode friendly
-  ====================================================================================
--->
-
 <head>
   <meta charset="UTF-8">
   <title>FOIA Request Email Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!--
-  --------------------------------------------------------------------
-  STYLES
-  --------------------------------------------------------------------
-  All CSS is embedded so the page works offline.
-  Two colour schemes are provided:
-    1. Light mode (default)
-    2. Dark mode (triggered by the user’s device setting)
-  --------------------------------------------------------------------
-  -->
-
   <style>
-    /* 1. Design tokens (colours, spacing, etc.) */
     :root {
       --govuk-blue: #1d70b8;
       --govuk-dark-blue: #003078;
@@ -50,13 +14,10 @@
       --govuk-grey-4: #f3f2f1;
       --govuk-white: #ffffff;
       --govuk-focus: #ffdd00;
-      --govuk-error: #d4351c;
       --max-width: 960px;
       --border-radius: 4px;
       --spacing-unit: 20px;
     }
-
-    /* 2. Dark-mode overrides */
     @media (prefers-color-scheme: dark) {
       :root {
         --govuk-blue: #5694ca;
@@ -67,12 +28,7 @@
         --govuk-white: #121212;
       }
     }
-
-    /* 3. Global styles */
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -80,32 +36,12 @@
       line-height: 1.4;
       color: var(--govuk-grey-1);
       background-color: var(--govuk-white);
-      -webkit-font-smoothing: antialiased;
     }
-
-    h1, h2 {
-      font-weight: 700;
-      line-height: 1.2;
-      margin-top: 0;
-    }
-
-    h1 {
-      font-size: 36px;
-    }
-
-    h2 {
-      font-size: 27px;
-      margin-bottom: var(--spacing-unit);
-    }
-
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 700;
-    }
-
-    input[type="text"],
-    textarea {
+    h1, h2 { font-weight: 700; line-height: 1.2; margin-top: 0; }
+    h1 { font-size: 36px; }
+    h2 { font-size: 27px; margin-bottom: var(--spacing-unit); }
+    label { display: block; margin-bottom: 5px; font-weight: 700; }
+    input[type="text"], textarea {
       width: 100%;
       padding: 10px;
       font-size: 19px;
@@ -114,31 +50,21 @@
       background-color: var(--govuk-white);
       color: var(--govuk-grey-1);
     }
-
-    textarea {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    input:focus,
-    textarea:focus {
+    textarea { min-height: 120px; resize: vertical; }
+    input:focus, textarea:focus {
       outline: 3px solid var(--govuk-focus);
       outline-offset: 0;
       box-shadow: inset 0 0 0 2px;
     }
-
     .wrapper {
       max-width: var(--max-width);
       margin: 0 auto;
       padding: var(--spacing-unit);
     }
-
-    .section {
-      margin-bottom: calc(var(--spacing-unit) * 2);
-    }
-
+    .section { margin-bottom: calc(var(--spacing-unit) * 2); }
     .button {
       display: inline-block;
+      margin-top: var(--spacing-unit);
       padding: 12px 20px;
       font-size: 19px;
       font-weight: 700;
@@ -147,111 +73,72 @@
       border: none;
       border-radius: var(--border-radius);
       cursor: pointer;
-      text-decoration: none;
     }
-
-    .button:hover {
-      background-color: var(--govuk-dark-blue);
-    }
-
+    .button:hover { background-color: var(--govuk-dark-blue); }
     .output-box {
       background-color: var(--govuk-grey-4);
       border-left: 5px solid var(--govuk-blue);
       padding: var(--spacing-unit);
-      white-space: pre-wrap;
+      white-space: pre-wrap;   /* keeps on-screen formatting */
       font-family: monospace;
       font-size: 16px;
       overflow-x: auto;
     }
-
-    /* 4. Responsive tweaks */
     @media (max-width: 600px) {
-      body {
-        font-size: 16px;
-      }
-
-      h1 {
-        font-size: 28px;
-      }
-
-      h2 {
-        font-size: 22px;
-      }
+      body { font-size: 16px; }
+      h1 { font-size: 28px; }
+      h2 { font-size: 22px; }
     }
   </style>
 </head>
 
 <body>
   <main class="wrapper">
-    <!-- ========================================================= -->
-    <!-- Page Header -->
-    <!-- ========================================================= -->
     <h1>FOIA Request Email Generator</h1>
     <p>
       Fill in the short form below and this tool will generate the full text of the FOIA request email at the bottom of the page. You can then copy and paste the text into your e-mail.
     </p>
 
-    <!-- ========================================================= -->
-    <!-- Input Form -->
-    <!-- ========================================================= -->
     <section class="section">
       <form id="foiaForm" oninput="generateText()">
-        <!-- Public Body -->
         <label for="publicBody">Public body name</label>
         <input type="text" id="publicBody" required>
 
-        <!-- FOIA Officer -->
         <label for="officer">Name of FOIA officer or public body official</label>
         <input type="text" id="officer" required>
 
-        <!-- Address -->
         <label for="address">Public body address</label>
         <textarea id="address" required></textarea>
 
-        <!-- Request Details -->
         <label for="details">Specific documents or information you are requesting</label>
         <textarea id="details" placeholder="e.g., bid tabulations, contracts, proposal packages" required></textarea>
 
-        <!-- Project Name -->
         <label for="project">Project or matter this concerns</label>
         <input type="text" id="project">
 
-        <!-- Relevant Dates -->
         <label for="dates">Relevant dates (if any)</label>
         <input type="text" id="dates" placeholder="e.g., bid opening date">
       </form>
     </section>
 
-    <!-- ========================================================= -->
-    <!-- Generated Email Box -->
-    <!-- ========================================================= -->
     <section class="section">
       <h2>Your ready-to-send email</h2>
-      <p>Copy the text below, paste it into your email client, and send.</p>
+      <button class="button" onclick="copyEmail()">Copy to clipboard</button>
       <div id="output" class="output-box" aria-live="polite">
-        <!-- JavaScript will fill this -->
+        <!-- generated email appears here -->
       </div>
     </section>
   </main>
 
-  <!--
-  ====================================================================
-  JAVASCRIPT
-  ====================================================================
-  Tiny helper to build the email text as the user types.
-  ====================================================================
-  -->
   <script>
     function generateText() {
-      // Grab the values from the form
       const publicBody = document.getElementById('publicBody').value || '[Public Body Name]';
-      const officer = document.getElementById('officer').value || '[FOIA Officer Name]';
-      const address = document.getElementById('address').value || '[Public Body Address]';
-      const details = document.getElementById('details').value || '[Details of Request]';
-      const project = document.getElementById('project').value || '[Project Name]';
-      const dates = document.getElementById('dates').value || '[Relevant Dates]';
+      const officer    = document.getElementById('officer').value || '[FOIA Officer Name]';
+      const address    = document.getElementById('address').value || '[Public Body Address]';
+      const details    = document.getElementById('details').value || '[Details of Request]';
+      const project    = document.getElementById('project').value || '[Project Name]';
+      const dates      = document.getElementById('dates').value || '[Relevant Dates]';
 
-      // Build the email
       const subject = `FOIA Request - ${project}`;
       const emailBody = `
 ${officer}
@@ -267,8 +154,8 @@ I hope this message finds you well. I am writing to submit a Freedom of Informat
 I respectfully request digital/electronic copies of the following:
 
 • ${details} related to the project below:
-	• Project: ${project}
-	• Relevant dates: ${dates}
+\t• Project: ${project}
+\t• Relevant dates: ${dates}
 
 Should you determine that any portion of the requested records is exempt from disclosure under 5 ILCS 140, I respectfully ask that you: (1) identify the specific portions claimed as exempt and cite the applicable statutory provision(s); (2) provide the factual and legal basis for claiming the exemption; and (3) release all non-exempt portions of the records with appropriate redactions of only the exempt material.
 
@@ -285,13 +172,18 @@ Sincerely,
 
       `.trim();
 
-      // Display the text
+      // Show plain text (white-space: pre-wrap keeps on-screen formatting)
       document.getElementById('output').textContent = emailBody;
     }
 
-    // Initial call so the box is not empty
-    generateText();
+    generateText(); // initial fill
+
+    function copyEmail() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('E-mail copied to clipboard!');
+      });
+    }
   </script>
 </body>
-
 </html>
