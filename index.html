@@ -2,146 +2,589 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>FOIA Request Email Generator</title>
+  <title>FOIA Request Generator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --govuk-blue: #1d70b8;
-      --govuk-dark-blue: #003078;
-      --govuk-grey-1: #0b0c0c;
-      --govuk-grey-2: #505a5f;
-      --govuk-grey-3: #b1b4b6;
-      --govuk-grey-4: #f3f2f1;
-      --govuk-white: #ffffff;
-      --govuk-focus: #ffdd00;
-      --max-width: 960px;
-      --border-radius: 4px;
-      --spacing-unit: 20px;
+      --color-primary: #0A0A0A;
+      --color-secondary: #6B7280;
+      --color-accent: #3B82F6;
+      --color-accent-hover: #2563EB;
+      --color-background: #FAFAFA;
+      --color-surface: #FFFFFF;
+      --color-border: #E5E7EB;
+      --color-border-focus: #3B82F6;
+      --color-success: #10B981;
+      --color-error: #EF4444;
+      
+      --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      
+      --radius-sm: 6px;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      
+      --transition-base: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     @media (prefers-color-scheme: dark) {
       :root {
-        --govuk-blue: #5694ca;
-        --govuk-grey-1: #f3f2f1;
-        --govuk-grey-2: #b1b4b6;
-        --govuk-grey-3: #505a5f;
-        --govuk-grey-4: #0b0c0c;
-        --govuk-white: #121212;
+        --color-primary: #F9FAFB;
+        --color-secondary: #9CA3AF;
+        --color-background: #0A0A0A;
+        --color-surface: #1F1F1F;
+        --color-border: #374151;
+        --shadow-sm: 0 1px 2px 0 rgba(255, 255, 255, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(255, 255, 255, 0.1), 0 2px 4px -1px rgba(255, 255, 255, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05);
       }
     }
-    * { box-sizing: border-box; }
-    body {
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      font-size: 19px;
-      line-height: 1.4;
-      color: var(--govuk-grey-1);
-      background-color: var(--govuk-white);
+      padding: 0;
     }
-    h1, h2 { font-weight: 700; line-height: 1.2; margin-top: 0; }
-    h1 { font-size: 36px; }
-    h2 { font-size: 27px; margin-bottom: var(--spacing-unit); }
-    label { display: block; margin-bottom: 5px; font-weight: 700; }
-    input[type="text"], textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 19px;
-      border: 2px solid var(--govuk-grey-1);
-      border-radius: var(--border-radius);
-      background-color: var(--govuk-white);
-      color: var(--govuk-grey-1);
+
+    html {
+      scroll-behavior: smooth;
     }
-    textarea { min-height: 120px; resize: vertical; }
-    input:focus, textarea:focus {
-      outline: 3px solid var(--govuk-focus);
-      outline-offset: 0;
-      box-shadow: inset 0 0 0 2px;
-    }
-    .wrapper {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: var(--spacing-unit);
-    }
-    .section { margin-bottom: calc(var(--spacing-unit) * 2); }
-    .button {
-      display: inline-block;
-      margin-top: var(--spacing-unit);
-      padding: 12px 20px;
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--govuk-white);
-      background-color: var(--govuk-blue);
-      border: none;
-      border-radius: var(--border-radius);
-      cursor: pointer;
-    }
-    .button:hover { background-color: var(--govuk-dark-blue); }
-    .output-box {
-      background-color: var(--govuk-grey-4);
-      border-left: 5px solid var(--govuk-blue);
-      padding: var(--spacing-unit);
-      white-space: pre-wrap;   /* keeps on-screen formatting */
-      font-family: monospace;
+
+    body {
+      font-family: var(--font-primary);
       font-size: 16px;
-      overflow-x: auto;
+      line-height: 1.6;
+      color: var(--color-primary);
+      background-color: var(--color-background);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
-    @media (max-width: 600px) {
-      body { font-size: 16px; }
-      h1 { font-size: 28px; }
-      h2 { font-size: 22px; }
+
+    /* Typography */
+    h1 {
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: clamp(20px, 4vw, 24px);
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+      color: var(--color-primary);
+      margin-bottom: 24px;
+    }
+
+    p {
+      color: var(--color-secondary);
+      line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    /* Layout */
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 20px;
+      min-height: 100vh;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        padding: 48px 32px;
+      }
+    }
+
+    /* Header Section */
+    .header {
+      text-align: center;
+      margin-bottom: 64px;
+      opacity: 1;
+    }
+
+    .header p {
+      font-size: 18px;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 2px;
+      background-color: var(--color-border);
+      border-radius: 1px;
+      overflow: hidden;
+      margin-top: 32px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+      width: 0%;
+      transition: width var(--transition-smooth);
+      border-radius: 1px;
+    }
+
+    /* Form Styles */
+    .form-container {
+      opacity: 1;
+    }
+
+    .form-group {
+      margin-bottom: 32px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-primary);
+      margin-bottom: 8px;
+      letter-spacing: 0.01em;
+      transition: color var(--transition-base);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-family: var(--font-primary);
+      color: var(--color-primary);
+      background-color: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-base);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: var(--font-primary);
+    }
+
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--color-secondary);
+      opacity: 0.8;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--color-border-focus);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .form-input:hover:not(:focus),
+    .form-textarea:hover:not(:focus) {
+      border-color: var(--color-secondary);
+    }
+
+    /* Input validation states */
+    .form-group.valid .form-input,
+    .form-group.valid .form-textarea {
+      border-color: var(--color-success);
+    }
+
+    .form-group.valid::after {
+      content: '✓';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--color-success);
+      font-weight: 600;
+      font-size: 18px;
+      opacity: 0;
+      animation: fadeIn 0.3s var(--transition-base) forwards;
+    }
+
+    .form-group.valid .form-textarea ~ .form-group.valid::after {
+      top: 60px;
+      transform: none;
+    }
+
+    /* Button Styles */
+    .button-container {
+      margin: 48px 0 32px;
+      text-align: center;
+      opacity: 1;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 32px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: var(--font-primary);
+      color: white;
+      background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      min-width: 200px;
+      letter-spacing: 0.01em;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all var(--transition-base);
+    }
+
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-icon {
+      margin-left: 8px;
+      transition: transform var(--transition-base);
+    }
+
+    .btn:hover .btn-icon {
+      transform: translateX(2px);
+    }
+
+    /* Output Section */
+    .output-section {
+      opacity: 1;
+    }
+
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .btn-secondary {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-accent);
+      background: transparent;
+      border: 1.5px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-accent);
+      color: white;
+      transform: translateY(-1px);
+    }
+
+    .output-box {
+      background: var(--color-surface);
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+      transition: all var(--transition-base);
+      position: relative;
+      min-height: 400px;
+    }
+
+    .output-box:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .output-box.copied {
+      border-color: var(--color-success);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+
+    /* Copy notification */
+    .copy-notification {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--color-primary);
+      color: var(--color-background);
+      padding: 12px 20px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all var(--transition-base);
+      z-index: 1000;
+    }
+
+    .copy-notification.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes ripple {
+      0% {
+        width: 0;
+        height: 0;
+        opacity: 0.5;
+      }
+      100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+      }
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px 16px;
+      }
+      
+      .form-input,
+      .form-textarea {
+        padding: 14px 16px;
+      }
+      
+      .btn {
+        width: 100%;
+        padding: 18px 32px;
+      }
+      
+      .output-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --color-border: #000000;
+        --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.3);
+        --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    /* Reduced motion support */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Loading state */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .loading .btn::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 
 <body>
-  <main class="wrapper">
-    <h1>FOIA Request Email Generator</h1>
-    <p>
-      Fill in the short form below and this tool will generate the full text of the FOIA request email at the bottom of the page. You can then copy and paste the text into your e-mail.
-    </p>
-
-    <section class="section">
-      <form id="foiaForm" oninput="generateText()">
-        <label for="publicBody">Public body name</label>
-        <input type="text" id="publicBody" required>
-
-        <label for="officer">Name of FOIA officer or public body official</label>
-        <input type="text" id="officer" required>
-
-        <label for="address">Public body address</label>
-        <textarea id="address" required></textarea>
-
-        <label for="details">Specific documents or information you are requesting</label>
-        <textarea id="details" placeholder="e.g., bid tabulations, contracts, proposal packages" required></textarea>
-
-        <label for="project">Project or matter this concerns</label>
-        <input type="text" id="project">
-
-        <label for="dates">Relevant dates (if any)</label>
-        <input type="text" id="dates" placeholder="e.g., bid opening date">
-      </form>
-    </section>
-
-    <section class="section">
-      <h2>Your ready-to-send email</h2>
-      <button class="button" onclick="copyEmail()">Copy to clipboard</button>
-      <div id="output" class="output-box" aria-live="polite">
-        <!-- generated email appears here -->
+  <div class="container">
+    <header class="header">
+      <h1>FOIA Request Generator</h1>
+      <p>Fill in the details below and generate an email ready to copy, paste, and send.</p>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
       </div>
-    </section>
-  </main>
+    </header>
+
+    <main>
+      <section class="form-container">
+        <form id="foiaForm" oninput="generateText()">
+          <div class="form-group">
+            <label for="publicBody" class="form-label">Public Body Name</label>
+            <input type="text" id="publicBody" class="form-input" required placeholder="e.g., City of Chicago">
+          </div>
+
+          <div class="form-group">
+            <label for="officer" class="form-label">FOIA Officer or Official Name</label>
+            <input type="text" id="officer" class="form-input" required placeholder="e.g., John Smith, FOIA Officer">
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="form-label">Public Body Address</label>
+            <textarea id="address" class="form-textarea" required placeholder="121 N LaSalle St&#10;Chicago, IL 60602"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="details" class="form-label">Specific Documents or Information Requested</label>
+            <textarea id="details" class="form-textarea" required placeholder="e.g., Bid tabulations, contracts, proposal packages for the downtown renovation project"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="project" class="form-label">Project or Matter</label>
+            <input type="text" id="project" class="form-input" placeholder="e.g., Downtown Renovation Project">
+          </div>
+
+          <div class="form-group">
+            <label for="dates" class="form-label">Relevant Dates</label>
+            <input type="text" id="dates" class="form-input" placeholder="e.g., January 15, 2024 - March 30, 2024">
+          </div>
+        </form>
+      </section>
+
+      <div class="button-container">
+        <button class="btn" onclick="copyEmail()" id="copyButton">
+          Copy Email to Clipboard
+          <span class="btn-icon">→</span>
+        </button>
+      </div>
+
+      <section class="output-section">
+        <div class="output-header">
+          <h2>Generated Email Request</h2>
+          <button class="btn-secondary" onclick="copyEmail()">
+            <span>📋</span>
+            Copy
+          </button>
+        </div>
+        <div id="output" class="output-box" role="region" aria-live="polite" aria-label="Generated FOIA email request">
+          <!-- Generated email appears here -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="copy-notification" id="copyNotification">
+    Email copied to clipboard successfully! ✓
+  </div>
 
   <script>
+    // Form validation and progress tracking
+    const formInputs = document.querySelectorAll('.form-input, .form-textarea');
+    const progressFill = document.getElementById('progressFill');
+    const copyNotification = document.getElementById('copyNotification');
+    
+    // Update progress bar based on filled inputs
+    function updateProgress() {
+      const totalInputs = formInputs.length;
+      const filledInputs = Array.from(formInputs).filter(input => input.value.trim() !== '').length;
+      const progress = (filledInputs / totalInputs) * 100;
+      progressFill.style.width = `${progress}%`;
+    }
+
+    // Add validation classes to form groups
+    formInputs.forEach(input => {
+      input.addEventListener('input', () => {
+        const formGroup = input.closest('.form-group');
+        if (input.value.trim()) {
+          formGroup.classList.add('valid');
+        } else {
+          formGroup.classList.remove('valid');
+        }
+        updateProgress();
+      });
+
+      // Add focus animations
+      input.addEventListener('focus', () => {
+        input.closest('.form-group').querySelector('.form-label').style.color = 'var(--color-accent)';
+      });
+
+      input.addEventListener('blur', () => {
+        input.closest('.form-group').querySelector('.form-label').style.color = 'var(--color-primary)';
+      });
+    });
+
     function generateText() {
       const publicBody = document.getElementById('publicBody').value || '[Public Body Name]';
-      const officer    = document.getElementById('officer').value || '[FOIA Officer Name]';
-      const address    = document.getElementById('address').value || '[Public Body Address]';
-      const details    = document.getElementById('details').value || '[Details of Request]';
-      const project    = document.getElementById('project').value || '[Project Name]';
-      const dates      = document.getElementById('dates').value || '[Relevant Dates]';
+      const officer = document.getElementById('officer').value || '[FOIA Officer Name]';
+      const address = document.getElementById('address').value || '[Public Body Address]';
+      const details = document.getElementById('details').value || '[Details of Request]';
+      const project = document.getElementById('project').value || '[Project Name]';
+      const dates = document.getElementById('dates').value || '[Relevant Dates]';
 
       const subject = `FOIA Request - ${project}`;
-      const emailBody = `
-${officer}
+      const emailBody = `${officer}
 ${publicBody}
 ${address}
 
@@ -167,23 +610,86 @@ I would appreciate confirmation of receipt of this request and an estimated time
 
 Thank you for your assistance and prompt attention to this matter. Please feel free to contact me if you need any clarification regarding this request.
 
-Sincerely,
+Sincerely,`;
 
-
-      `.trim();
-
-      // Show plain text (white-space: pre-wrap keeps on-screen formatting)
       document.getElementById('output').textContent = emailBody;
     }
 
-    generateText(); // initial fill
-
     function copyEmail() {
-      const text = document.getElementById('output').textContent;
+      const copyButton = document.getElementById('copyButton');
+      const outputBox = document.getElementById('output');
+      const text = outputBox.textContent;
+      
+      // Add loading state
+      copyButton.classList.add('loading');
+      
       navigator.clipboard.writeText(text).then(() => {
-        alert('E-mail copied to clipboard!');
+        // Remove loading state
+        copyButton.classList.remove('loading');
+        
+        // Show success feedback
+        outputBox.classList.add('copied');
+        copyNotification.classList.add('show');
+        
+        // Reset styles after delay
+        setTimeout(() => {
+          outputBox.classList.remove('copied');
+          copyNotification.classList.remove('show');
+        }, 3000);
+      }).catch(() => {
+        // Remove loading state
+        copyButton.classList.remove('loading');
+        
+        // Fallback for browsers that don't support clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        // Show notification
+        copyNotification.textContent = 'Email copied to clipboard!';
+        copyNotification.classList.add('show');
+        setTimeout(() => {
+          copyNotification.classList.remove('show');
+        }, 3000);
       });
     }
+
+    // Initialize form
+    generateText();
+    updateProgress();
+
+    // Add subtle parallax effect on scroll (optional enhancement)
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const header = document.querySelector('.header');
+      if (header && scrolled > 0) {
+        header.style.transform = `translateY(${scrolled * 0.1}px)`;
+        header.style.opacity = Math.max(1 - scrolled / 400, 0.3);
+      }
+    });
+
+    // Intersection Observer for smooth scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe elements for animation
+    document.querySelectorAll('.form-group').forEach(el => {
+      observer.observe(el);
+    });
   </script>
 </body>
 </html>
