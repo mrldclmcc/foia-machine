@@ -223,6 +223,9 @@
       margin: 48px 0 32px;
       text-align: center;
       opacity: 1;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
     }
 
     .btn {
@@ -244,6 +247,27 @@
       overflow: hidden;
       min-width: 200px;
       letter-spacing: 0.01em;
+    }
+
+    .btn-secondary {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--color-accent);
+      background: transparent;
+      border: 1.5px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-accent);
+      color: white;
+      transform: translateY(-1px);
     }
 
     .btn:hover {
@@ -294,27 +318,6 @@
       margin-bottom: 20px;
       flex-wrap: wrap;
       gap: 16px;
-    }
-
-    .btn-secondary {
-      padding: 12px 24px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--color-accent);
-      background: transparent;
-      border: 1.5px solid var(--color-accent);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      transition: all var(--transition-base);
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-secondary:hover {
-      background: var(--color-accent);
-      color: white;
-      transform: translateY(-1px);
     }
 
     .output-box {
@@ -406,6 +409,10 @@
         padding: 14px 16px;
       }
       
+      .button-container {
+        flex-direction: column;
+      }
+      
       .btn {
         width: 100%;
         padding: 18px 32px;
@@ -486,6 +493,12 @@
             <input type="text" id="publicBody" class="form-input" required placeholder="e.g., City of Chicago">
           </div>
 
+          <!-- New FOIA Email Address Field -->
+          <div class="form-group">
+            <label for="foiaEmail" class="form-label">FOIA Email Address</label>
+            <input type="email" id="foiaEmail" class="form-input" required placeholder="e.g., foia@cityofchicago.org">
+          </div>
+
           <div class="form-group">
             <label for="officer" class="form-label">FOIA Officer or Official Name</label>
             <input type="text" id="officer" class="form-input" required placeholder="e.g., John Smith, FOIA Officer">
@@ -517,6 +530,10 @@
         <button class="btn" onclick="copyEmail()" id="copyButton">
           Copy Email to Clipboard
           <span class="btn-icon">→</span>
+        </button>
+        <button class="btn" onclick="openEmailClient()" id="emailButton">
+          Open in Email Client
+          <span class="btn-icon">✉️</span>
         </button>
       </div>
 
@@ -577,6 +594,7 @@
 
     function generateText() {
       const publicBody = document.getElementById('publicBody').value || '[Public Body Name]';
+      const foiaEmail = document.getElementById('foiaEmail').value || '[foia@example.org]';
       const officer = document.getElementById('officer').value || '[FOIA Officer Name]';
       const address = document.getElementById('address').value || '[Public Body Address]';
       const details = document.getElementById('details').value || '[Details of Request]';
@@ -655,6 +673,60 @@ Sincerely,`;
           copyNotification.classList.remove('show');
         }, 3000);
       });
+    }
+
+    function openEmailClient() {
+      const foiaEmail = document.getElementById('foiaEmail').value;
+      if (!foiaEmail || foiaEmail === '[foia@example.org]') {
+        alert('Please enter a valid FOIA email address');
+        return;
+      }
+      
+      const publicBody = document.getElementById('publicBody').value || '[Public Body Name]';
+      const officer = document.getElementById('officer').value || '[FOIA Officer Name]';
+      const address = document.getElementById('address').value || '[Public Body Address]';
+      const details = document.getElementById('details').value || '[Details of Request]';
+      const project = document.getElementById('project').value || '[Project Name]';
+      const dates = document.getElementById('dates').value || '[Relevant Dates]';
+
+      const subject = `FOIA Request - ${project}`;
+      const body = `${officer}
+${publicBody}
+${address}
+
+Subject: ${subject}
+
+Dear ${officer},
+
+I hope this message finds you well. I am writing to submit a Freedom of Information Act request pursuant to 5 ILCS 140. This is a non-commercial request.
+
+I respectfully request digital/electronic copies of the following:
+
+• ${details} related to the project below:
+\t• Project: ${project}
+\t• Relevant dates: ${dates}
+
+Should you determine that any portion of the requested records is exempt from disclosure under 5 ILCS 140, I respectfully ask that you: (1) identify the specific portions claimed as exempt and cite the applicable statutory provision(s); (2) provide the factual and legal basis for claiming the exemption; and (3) release all non-exempt portions of the records with appropriate redactions of only the exempt material.
+
+Please note that under Illinois law, an agency may not deny access to records on grounds that they contain confidential information; the agency may delete the confidential information and must disclose the remainder of the record.
+
+As a not-for-profit organization serving the public interest, I respectfully request a waiver of copying fees for these records. If fees cannot be waived or if charges will exceed $25, please contact me with the estimated costs before proceeding.
+
+I would appreciate confirmation of receipt of this request and an estimated timeline for response, as required under the Act.
+
+Thank you for your assistance and prompt attention to this matter. Please feel free to contact me if you need any clarification regarding this request.
+
+Sincerely,`;
+
+      // Encode the subject and body for the mailto link
+      const encodedSubject = encodeURIComponent(subject);
+      const encodedBody = encodeURIComponent(body);
+      
+      // Create the mailto link
+      const mailtoLink = `mailto:${foiaEmail}?subject=${encodedSubject}&body=${encodedBody}`;
+      
+      // Open the email client
+      window.location.href = mailtoLink;
     }
 
     // Initialize form
